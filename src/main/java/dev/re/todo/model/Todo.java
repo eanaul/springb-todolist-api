@@ -26,4 +26,8 @@ public class Todo {
     protected void onCreate() {
         createdAt = new Date();
     }
+
+    public boolean isCompleted() {
+        return completed;
+    }
 }

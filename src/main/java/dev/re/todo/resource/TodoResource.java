@@ -45,11 +45,20 @@ public class TodoResource {
         return new ResponseEntity<>(newTodo, HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public ResponseEntity<?> update(@RequestBody Todo todo){
-        Todo updatedTodo = todoService.save(todo);
-        return new ResponseEntity<>(updatedTodo, HttpStatus.OK);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable long id, @RequestBody Todo todoRequest) {
+        Optional<Todo> todoOptional = todoService.findById(id);
+        if (todoOptional.isPresent()) {
+            Todo todo = todoOptional.get();
+            todo.setThing_to_do(todoRequest.getThing_to_do());
+            todo.setCompleted(todoRequest.isCompleted());
+            todoService.save(todo);
+            return ResponseEntity.ok().body(todo);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id){
